@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+
 import os
 import sys
 
@@ -47,10 +49,12 @@ def flask_pytest(true_app):
     inner_run = true_app.run
 
     def run_app(*args, **kwargs):
-        print('Running tests...')
-        p = Process(target=run_tests_sync, name='background-pytest')
-        p.daemon = True
-        p.start()
+        # 仅在 reload 之后的进程中运行
+        if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+            print('Running tests...')
+            p = Process(target=run_tests_sync, name='background-pytest')
+            p.daemon = True
+            p.start()
         return inner_run(*args, **kwargs)
 
     true_app.run = run_app
@@ -112,5 +116,9 @@ def html(name):
 # 引入各 blueprint
 
 
-if __name__ == '__main__':
+def main():
     app.run(debug=True)
+
+
+if __name__ == '__main__':
+    main()
