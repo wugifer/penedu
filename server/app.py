@@ -5,8 +5,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.realpath(__file__ + '/../../')))
 
-from flask import Flask, session, redirect, url_for, render_template, request
-from django.core.exceptions import ObjectDoesNotExist
+from flask import Flask, render_template
 
 from multiprocessing import Process
 import pytest
@@ -70,22 +69,22 @@ app.secret_key = 'D\xe7\x82\xe2v\xc22$ha0\xa9\xc7\x97!\xfc'
 ################################################################################
 #  首页
 
-@app.before_request
-def before_request():
-    if 'uid' not in session:
-        if request.endpoint not in ['user.login', 'user.logout', None]:
-            if not request.endpoint.endswith('static'):
-                return redirect(url_for('user.login'))
-    else:
-        try:
-            if not request.endpoint.endswith('static'):
-                try:
-                    user = DUser.get(pk=session['uid'])
-                    request.user = user
-                except ObjectDoesNotExist as e:
-                    return redirect(url_for('user.login'))
-        except AttributeError as e:
-            pass
+# @app.before_request
+# def before_request():
+#     if 'uid' not in session:
+#         if request.endpoint not in ['user.login', 'user.logout', None]:
+#             if not request.endpoint.endswith('static'):
+#                 return redirect(url_for('user.login'))
+#     else:
+#         try:
+#             if not request.endpoint.endswith('static'):
+#                 try:
+#                     user = DUser.get(pk=session['uid'])
+#                     request.user = user
+#                 except ObjectDoesNotExist as e:
+#                     return redirect(url_for('user.login'))
+#         except AttributeError as e:
+#             pass
 
 
 @app.route('/favicon.ico')
@@ -95,7 +94,7 @@ def favicon():
 
 @app.route('/')
 def index():
-    return render_template('index.html', render=Render())
+    return render_template('index.html')
 
 
 @app.route('/<name>.html')
