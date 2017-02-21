@@ -6,6 +6,8 @@ import importlib
 
 # <editor-fold desc="ROOT_ANCHOR"> @formatter:off
 # 由 entry.create_code.create_root 自动生成，请勿修改！
+if __name__ == '__main__':  # 避免编辑器优化破环自动化结构
+    pass
 import os
 import sys
 
@@ -21,6 +23,10 @@ from entry.django_setup import django_setup
 django_setup()
 # @formatter:on </editor-fold>
 
+# <editor-fold desc="MODEL_ANCHOR"> @formatter:off
+# 由 entry.create_code.create_model 自动生成，请勿修改！
+models = ['kv', 'user']
+# @formatter:on </editor-fold>
 
 """
 可用入口点数组
@@ -33,8 +39,11 @@ ENTRY_POINTS = [
     10,
     ['entry.create_code'],
     ['entry.test_all'],
+    20,
+    ['entry.migrate', '99999', '0'],
+    ['entry.migrate', '0', '-1'],
     100,
-    ['entry.django_manage', 'any.py', 'makemigrations', 'user'],
+    ['entry.django_manage', 'any.py', 'makemigrations'] + models,
     ['entry.django_manage', 'any.py', 'migrate'],
     ['entry.django_manage', 'any.py', 'migrate', '--database=case'],
 ]
@@ -103,7 +112,7 @@ def _exec_module_main(params):
     if len(params) == 1:
         entry_main()
     else:
-        entry_main(tuple(params[1:]))
+        entry_main(*tuple(params[1:]))
 
 
 def _select_and_exec_entry():

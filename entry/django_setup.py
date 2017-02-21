@@ -8,10 +8,12 @@ import os
 import django
 from django.conf import settings
 
-INSTALLED_APPS = [
-    'model.user',
-]
+from libs.config import Config
 
+# <editor-fold desc="MODEL_ANCHOR"> @formatter:off
+# 由 entry.create_code.create_model 自动生成，请勿修改！
+models = ['kv', 'user']
+# @formatter:on </editor-fold>
 
 class SQLRouter(object):
     def db_for_read(self, model, **hints):
@@ -68,7 +70,7 @@ def django_setup():
     settings.configure(
         DATABASES=DATABASES,
         DATABASE_ROUTERS=['entry.django_setup.SQLRouter'],
-        INSTALLED_APPS=INSTALLED_APPS,
+        INSTALLED_APPS=['model.%s' % x for x in models],
         SECRET_KEY=SECRET_KEY,
         DEBUG=True
     )

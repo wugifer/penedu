@@ -18,7 +18,7 @@ class Config(MultiConf):
     def __init__(self, test=False, case=False):
         # 环境选择
         assert isinstance(test, bool) and isinstance(case, bool)
-        selector = os.getenv('SIEVE_SELECTOR', 'DEV')
+        selector = os.getenv('PENEDU_SELECTOR', 'DEV')
         if case:
             test = True
 

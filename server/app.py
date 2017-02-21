@@ -11,6 +11,8 @@ from flask import Flask, render_template, redirect, request, session, url_for
 
 # <editor-fold desc="ROOT_ANCHOR"> @formatter:off
 # 由 entry.create_code.create_root 自动生成，请勿修改！
+if __name__ == '__main__':  # 避免编辑器优化破环自动化结构
+    pass
 import os
 import sys
 

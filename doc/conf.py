@@ -20,12 +20,21 @@
 
 # <editor-fold desc="ROOT_ANCHOR"> @formatter:off
 # 由 entry.create_code.create_root 自动生成，请勿修改！
+if __name__ == '__main__':  # 避免编辑器优化破环自动化结构
+    pass
 import os
 import sys
 
 PROJECT_ROOT = os.path.abspath(os.path.realpath(__file__ + '/../../'))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
+# @formatter:on </editor-fold>
+
+# <editor-fold desc="DJANGO_ANCHOR"> @formatter:off
+# 由 entry.create_code.create_django 自动生成，请勿修改！
+from entry.django_setup import django_setup
+
+django_setup()
 # @formatter:on </editor-fold>
 
 
@@ -38,8 +47,11 @@ if PROJECT_ROOT not in sys.path:
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc',
-              'sphinx.ext.viewcode']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon'
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -90,7 +102,9 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'classic'
+html_theme = 'default'
+# 支持隐藏侧边栏
+html_theme_options = {'collapsiblesidebar': True}
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
