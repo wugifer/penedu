@@ -57,7 +57,8 @@ def main():
     cc = CreateCode('entry/main.py', 'DJANGO_ANCHOR', 'entry/create_code', 'create_django')
     cc.apply_more('server/app.py', code_seq=0)
 
-    cc = CreateCode('entry/create_code.py', 'ROOT_ANCHOR', 'entry/create_code', 'create_root')
+    cc = CreateCode('doc/conf.py', 'ROOT_ANCHOR', 'entry/create_code', 'create_root')
+    cc.apply_more('entry/create_code.py', code_seq=0)
     cc.apply_more('entry/main.py', code_seq=0)
     cc.apply_more('server/app.py', code_seq=0)
 
