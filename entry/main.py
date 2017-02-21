@@ -2,25 +2,25 @@
 # -*- coding: utf-8 -*-
 
 
-# ROOT_ANCHOR
-# 由 main.create_root_path 自动生成，请勿修改！
+import importlib
+
+# <editor-fold desc="ROOT_ANCHOR"> @formatter:off
+# 由 entry.create_code.create_root 自动生成，请勿修改！
 import os
 import sys
 
 PROJECT_ROOT = os.path.abspath(os.path.realpath(__file__ + '/../../'))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
-# ROOT_ANCHOR
+# @formatter:on </editor-fold>
 
-# DJANGO_ANCHOR
-# 由 django_setup.create_django_setup 自动生成，请勿修改！
-if __name__ == '__main__':
-    from entry.django_setup import django_setup
+# <editor-fold desc="DJANGO_ANCHOR"> @formatter:off
+# 由 entry.create_code.create_django 自动生成，请勿修改！
+from entry.django_setup import django_setup
 
-    django_setup()
-# DJANGO_ANCHOR
+django_setup()
+# @formatter:on </editor-fold>
 
-import importlib
 
 """
 可用入口点数组
@@ -32,22 +32,12 @@ ENTRY_POINTS = [
     ['server.app'],  # entry_id = 0, 固定为执行不带参数的 server.app
     10,
     ['entry.create_code'],
+    ['entry.test_all'],
     100,
     ['entry.django_manage', 'any.py', 'makemigrations', 'user'],
     ['entry.django_manage', 'any.py', 'migrate'],
     ['entry.django_manage', 'any.py', 'migrate', '--database=case'],
 ]
-
-
-def create_root_path():
-    return '\n'.join([
-        'import os',
-        'import sys',
-        '',
-        'PROJECT_ROOT = os.path.abspath(os.path.realpath(__file__ + \'/../../\'))',
-        'if PROJECT_ROOT not in sys.path:',
-        '    sys.path.insert(0, PROJECT_ROOT)',
-    ])
 
 
 def main():

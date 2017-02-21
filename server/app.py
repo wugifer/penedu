@@ -2,17 +2,34 @@
 # -*- coding: utf-8 -*-
 
 
+import hashlib
+import time
+from multiprocessing import Process
+
+import pytest
+from flask import Flask, render_template, redirect, request, session, url_for
+
+# <editor-fold desc="ROOT_ANCHOR"> @formatter:off
+# 由 entry.create_code.create_root 自动生成，请勿修改！
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath(os.path.realpath(__file__ + '/../../')))
+PROJECT_ROOT = os.path.abspath(os.path.realpath(__file__ + '/../../'))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+# @formatter:on </editor-fold>
 
-from flask import Flask, render_template
+# <editor-fold desc="DJANGO_ANCHOR"> @formatter:off
+# 由 entry.create_code.create_django 自动生成，请勿修改！
+from entry.django_setup import django_setup
 
-from multiprocessing import Process
-import pytest
-import time
+django_setup()
+# @formatter:on </editor-fold>
 
+# <editor-fold desc="BLUEPRINT_ANCHOR_IM"> @formatter:off
+# 由 entry.create_code.create_blueprint 自动生成，请勿修改！
+from server.blueprint.user_controller import bp as bpee11cbb19052e40b07aac0ca060c23ee
+# @formatter:on </editor-fold>
 
 # 自定义 flask，解决与 angularjs 的标识冲突
 class CustomFlask(Flask):
@@ -31,12 +48,16 @@ class CustomFlask(Flask):
 #
 # 自动测试进程，及自动测试封装
 
+# <editor-fold desc="SUB_ANCHOR"> @formatter:off
+# 由 entry.create_code.create_sub 自动生成，请勿修改！
+sub_modules = ['entry', 'libc', 'libs', 'model', 'server']
+# @formatter:on </editor-fold>
+
+
 
 def run_tests_sync():
-    # server, lib, model
-    root = [
-        os.path.abspath(os.path.realpath(__file__) + "/.."),
-    ]
+    # entry, libc, libs, model, server
+    root = [os.path.abspath(os.path.realpath('%s/../../%s' % (__file__, x))) for x in sub_modules]
     if pytest.main(root + ['--exitfirst', '--cov']) != 0:
         # 限 windows 下报警
         if os.path.join('a', 'b') == 'a\\b':
@@ -73,22 +94,22 @@ app.secret_key = 'D\xe7\x82\xe2v\xc22$ha0\xa9\xc7\x97!\xfc'
 ################################################################################
 #  首页
 
-# @app.before_request
-# def before_request():
-#     if 'uid' not in session:
-#         if request.endpoint not in ['user.login', 'user.logout', None]:
-#             if not request.endpoint.endswith('static'):
-#                 return redirect(url_for('user.login'))
-#     else:
-#         try:
-#             if not request.endpoint.endswith('static'):
-#                 try:
-#                     user = DUser.get(pk=session['uid'])
-#                     request.user = user
-#                 except ObjectDoesNotExist as e:
-#                     return redirect(url_for('user.login'))
-#         except AttributeError as e:
-#             pass
+@app.before_request
+def before_request():
+    if 'uid' not in session:
+        if request.endpoint not in ['user.login', 'user.logout', None]:
+            if not request.endpoint.endswith('static'):
+                return redirect(url_for('user.login'))
+                # else:
+                #     try:
+                #         if not request.endpoint.endswith('static'):
+                #             try:
+                #                 # user = DUser.get(pk=session['uid'])
+                #                 # request.user = user
+                #             except ObjectDoesNotExist as e:
+                #                 return redirect(url_for('user.login'))
+                #     except AttributeError as e:
+                #         pass
 
 
 @app.route('/favicon.ico')
@@ -109,11 +130,11 @@ def html(name):
 ################################################################################
 # 其它的 route 都在这下面
 
+# <editor-fold desc="BLUEPRINT_ANCHOR_RE"> @formatter:off
+# 由 entry.create_code.create_blueprint 自动生成，请勿修改！
+app.register_blueprint(bpee11cbb19052e40b07aac0ca060c23ee, url_prefix='/user')
+# @formatter:on </editor-fold>
 
-
-################################################################################
-#
-# 引入各 blueprint
 
 
 def main():

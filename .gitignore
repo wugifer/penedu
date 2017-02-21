@@ -1,5 +1,7 @@
 *.pyc
 .coverage
+/.cache
 /.idea
 /db/*.db
+/entry/htmlcov
 migrations

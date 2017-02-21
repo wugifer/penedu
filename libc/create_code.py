@@ -3,10 +3,8 @@
 
 import importlib
 import os
-import sys
-import traceback
 
-from lib.debug_check import accept_param
+from libc.debug_check import accept_param
 
 
 class CreateCode:
@@ -14,11 +12,11 @@ class CreateCode:
     使用自动生成的代码替换指定文件中的代码。执行时会判断目标代码片段是否改变，仅当目标代码变化后才替换。
 
     Args:
-        target (str): 自动化代码目标文件，相对于 CreateCode() 调用者的路径，不能以 '/' 开头
+        target (str): 自动化代码目标文件，相对于项目根路径，不能以 '/' 开头
         anchor (str): 界定符，自动化代码位于第一个 anchor 和第二个 anchor 之间，
                       anchor 可以在任意位置，且不需要独占一行，自动化代码与两个 anchor 均不在同一行，
                       自动化代码的第一行提示与第一个 anchor 对齐
-        source (str): 产生自动化代码的文件，相对于 CreateCode() 调用者的路径，不能以 '/' 开头，不含后缀名
+        source (str): 产生自动化代码的文件，相对于项目根路径，不能以 '/' 开头，不含后缀名
         func   (str): 产生自动化代码的函数，返回值为目标代码/目标代码列表，其中第一段被本次调用使用，
                       其余的被后续的 apply_more() 使用
         args (tutle): 可变长度参数，传递给 func
@@ -67,7 +65,7 @@ class CreateCode:
         """
 
         # 加载
-        filename = os.path.relpath(os.path.realpath('%s/../%s' % (self.base_path, source)), sys.path[0])
+        filename = source.replace('/', '.').replace('\\', '.')
         imodule = importlib.import_module(filename)
         ifunc = getattr(imodule, func)
 
@@ -85,19 +83,10 @@ class CreateCode:
 
     def _get_base_path(self):
         """
-        获得调用者的绝对路径
+        获得项目根路径
         """
 
-        # 调用栈，最后三项分别为：调用者、CreateCode()、_get_base_path()，注意装饰器会增加一级调用栈
-        line = traceback.format_stack()[-(3 + 1)]
-
-        # 留下文件部分，验证代码部分
-        tokens = line.split('\n')
-        self.base_path = tokens[0].split('\"')[1]
-        code = tokens[1]
-
-        # 验证
-        assert 'CreateCode' in code, 'No "CreateCode" in "%s"' % code
+        self.base_path = os.path.abspath(os.path.realpath('%s/../../' % __file__))
 
     @accept_param(None, str, str)
     def _get_target(self, target, anchor):
@@ -106,7 +95,7 @@ class CreateCode:
         """
 
         # 读
-        path = os.path.realpath('%s/../%s' % (self.base_path, target))
+        path = os.path.realpath('%s/%s' % (self.base_path, target))
         ifile = file(path, 'rb')
         self.text = ifile.readlines()
         ifile.close()
@@ -126,7 +115,7 @@ class CreateCode:
 
         # 定位 end
         for line in range(start_line, len(self.text)):
-            self.end = self.text[line].find(anchor)
+            self.end = self.text[line].find('</editor-fold>')
             if self.end >= 0:
                 self.end = sum([len(self.text[x]) for x in range(line)])
                 break
@@ -145,31 +134,31 @@ class CreateCode:
         """
 
         # 写
-        filename = os.path.abspath('%s/../%s' % (self.base_path, self.target))
+        filename = os.path.abspath('%s/%s' % (self.base_path, self.target))
         ofile = file(filename, 'wb')
         ofile.write('%s%s%s%s' % (
             self.text[:self.start],
-            ' ' * self.tip_start,
+            '',  # ' ' * self.tip_start,
             self.codes[code_seq],
             self.text[self.end:]
         ))
         ofile.close()
 
 
-# ANCHOR1
-# 由 create_code._create_anything 自动生成，请勿修改！
+# <editor-fold desc="ANCHOR1"> @formatter:off
+# 由 libc.create_code._create_anything 自动生成，请勿修改！
 # hi，修改自身也是可以的哈
-# ANCHOR1
+# @formatter:on </editor-fold>
 
-# ANCHOR2
-# 由 create_code._create_anything 自动生成，请勿修改！
+# <editor-fold desc="ANCHOR2"> @formatter:off
+# 由 libc.create_code._create_anything 自动生成，请勿修改！
 # hi，修改自身也是可以的哈...2
-# ANCHOR2
+# @formatter:on </editor-fold>
 
 def _create_anything(text):
     return [text, text + '...2']
 
 
 if __name__ == '__main__':
-    cc = CreateCode('create_code.py', 'ANCHOR1', 'create_code', '_create_anything', '# hi，修改自身也是可以的哈')
-    cc.apply_more(None, 'ANCHOR2', 1)
+    cc = CreateCode('libc/create_code.py', 'ANCHOR1', 'libc/create_code', '_create_anything', '# hi，修改自身也是可以的哈')
+    cc.apply_more(anchor='ANCHOR2', code_seq=1)
