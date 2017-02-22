@@ -33,6 +33,7 @@ def login():
 
         # 密码验证成功
         if user.verify(j['hash'], timeout=5):
+            session['login'] = user.login
             session['uid'] = user.id
             return '{"login": "ok"}'
         else:

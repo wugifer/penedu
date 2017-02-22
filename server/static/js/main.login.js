@@ -18,7 +18,8 @@ requirejs(['app/login.controller'],
 
             .module('loginApp', [])
 
-            .controller('loginController', loginController);
+            .controller('loginController', loginController)
+        ;
 
         angular.bootstrap(document, ['loginApp']);
     }
