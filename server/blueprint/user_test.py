@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import datetime
 import hashlib
 
 import pytest
@@ -10,8 +11,10 @@ from server.app import app as flask_app
 
 
 def login(client):
+    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
     client.post(url_for('user.login'), content_type='application/json',
-                data='{"login": "admin", "password": "%s"}' % hashlib.md5('admin').hexdigest())
+                data='{"login": "test", "hash": "%s"}' % hashlib.md5(
+                    now + hashlib.md5('123456').hexdigest()).hexdigest())
 
 
 def test_login(client):

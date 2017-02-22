@@ -38,13 +38,16 @@ def create_django():
 
 
 def create_migration():
-    step = []
+    step = {
+        'm': [],
+        't': []
+    }
 
     # 扫描
     for column in os.listdir(os.path.abspath('%s/migration/' % PROJECT_ROOT)):
-        # 仅跟踪卷号 = mxx 结构的目录
+        # 仅跟踪卷号 = mxx, txx 结构的目录
         try:
-            if len(column) != 3 or column[0] != 'm':
+            if len(column) != 3 or (column[0] != 'm' and column[0] != 't'):
                 continue
             n_column = string.atoi(column[1:])
         except ValueError:
@@ -53,25 +56,30 @@ def create_migration():
         for name in os.listdir(os.path.abspath('%s/migration/%s/' % (PROJECT_ROOT, column))):
             # 仅跟踪序号 = myyy_.py 结构的文件
             try:
-                if name[0] != 'm' or name[4] != '_' or name[-3:] != '.py':
+                if name[0] != column[0] or name[4] != '_' or name[-3:] != '.py':
                     continue
                 n_seq = n_column * 1000 + string.atoi(name[1:4])
             except ValueError:
                 continue
 
-            step.append({'seq': n_seq, 'name': '%s.%s' % (column, name[:-3])})
+            step[column[0]].append({'seq': n_seq, 'name': '%s.%s' % (column, name[:-3])})
 
     # 排序
-    step.sort(lambda x, y: cmp(x['seq'], y['seq']))
+    step['m'].sort(lambda x, y: cmp(x['seq'], y['seq']))
+    step['t'].sort(lambda x, y: cmp(x['seq'], y['seq']))
 
-    code0 = ['from migration.%s import up as up%d, down as down%d' % (x['name'], x['seq'], x['seq']) for x in step]
+    # 输出
+    code0 = ['from migration.%(name)s import up as mu%(seq)d, down as md%(seq)d' % x for x in step['m']] + \
+            [''] + \
+            ['from migration.%(name)s import up as tu%(seq)d, down as td%(seq)d' % x for x in step['t']]
     code0 = '\n'.join(code0)
 
-    code1 = ['    (%d, up%d, down%d, \'%s\')' % (x['seq'], x['seq'], x['seq'], x['name']) for x in step]
-    code1 = ['step_list = ['] + code1 + [']']
-    code1 = '\n'.join(code1)
+    code1a = ',\n'.join(['    (%(seq)d, mu%(seq)d, md%(seq)d, \'%(name)s\')' % x for x in step['m']])
+    code1a = '\n'.join(['mlist = ['] + [code1a] + [']'])
+    code1b = ',\n'.join(['    (%(seq)d, tu%(seq)d, td%(seq)d, \'%(name)s\')' % x for x in step['t']])
+    code1b = '\n'.join(['tlist = ['] + [code1b] + [']'])
 
-    return [code0, code1]
+    return [code0, '\n'.join([code1a, '', code1b])]
 
 
 def create_model():

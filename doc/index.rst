@@ -28,3 +28,7 @@ model.user.models
 
 .. automodule:: model.user.models
 
+server.blueprint.user_controller
+--------------------------------
+
+.. automodule:: server.blueprint.user_controller

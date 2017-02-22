@@ -12,16 +12,20 @@ from server.app import app as flask_app
 from server.blueprint.user_test import login
 
 
-def test_login(client):
-    # 未登录
+# 未登录
+def test_not_login(client):
     assert client.get(url_for('index')).status_code == 302
 
-    # 密码错误
+
+# 用户、密码错误
+def test_login_error(client):
     response = client.post(url_for('user.login'), content_type='application/json',
                            data='{"login": "xxx", "password": "yyy"}')
-    assert response.status_code == 200 and 'error' in response.json
+    assert response.status_code == 200 and 'login' in response.json and response.json['login'] == 'fail'
 
-    # 密码正确
+
+# 密码正确
+def test_login_ok(client):
     login(client)
     assert client.get(url_for('index')).status_code == 200
 
@@ -63,6 +67,7 @@ def test_anything_and_nothing():
                     importlib.import_module(module_name)
             else:
                 folder_list.append(fullname)
+
 
 myapps = [
     # APP_ANCHOR

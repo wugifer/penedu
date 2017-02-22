@@ -28,28 +28,30 @@ from model.kv.models import Kv
 
 # <editor-fold desc="MIGRATION_ANCHOR_IM"> @formatter:off
 # 由 entry.create_code.create_migration 自动生成，请勿修改！
-from migration.m00.m001_default_user import up as up1, down as down1
+from migration.m00.m001_default_user import up as mu1, down as md1
+
+from migration.t00.t001_default_user import up as tu1, down as td1
 # @formatter:on </editor-fold>
 
 
 class Migration():
-    def __init__(self):
+    def __init__(self, migration='migration'):
         try:
-            self.last = Kv.objects.get(group='system', key='migration')
+            self.last = Kv.objects.get(group='system', key=migration)
         except Kv.DoesNotExist:
-            self.last = Kv.objects.create(group='system', key='migration', n=0)
+            self.last = Kv.objects.create(group='system', key=migration, n=0)
 
-    def run(self, max_step=99999, down=0):
+    def run(self, max_step=99999, down=0, step_list=None):
         """
         执行数据迁移
         :return:
         """
 
         last_migration = self.last.n
-        print 'last migration step ==> %d' % last_migration
+        print 'last migration step ==> %d, %s ...' % (last_migration, 'down' if down != 0 else 'up')
 
         # 回退
-        if (down != 0):
+        if down != 0:
             min_step = down if down > 0 else last_migration + down
             for step in reversed(step_list):
                 if step[0] > min_step and step[0] <= last_migration:
@@ -86,27 +88,35 @@ class Migration():
 
 # <editor-fold desc="MIGRATION_ANCHOR_LI"> @formatter:off
 # 由 entry.create_code.create_migration 自动生成，请勿修改！
-step_list = [
-    (1, up1, down1, 'm00.m001_default_user')
+mlist = [
+    (1, mu1, md1, 'm00.m001_default_user')
+]
+
+tlist = [
+    (1, tu1, td1, 't00.t001_default_user')
 ]
 # @formatter:on </editor-fold>
 
 def main(*args):
-    for case in [True, False]:
-        # 设置不同的环境
-        config = Config(case=case)
+    # down = 0
+    # down = -n, 回退 n 步，限开发过程中不同分支间的版本迁移，慎用
+    # down =  n, 回退到第 n 步（不含），限开发过程中不同分支间的版本迁移，慎用
 
-        print
-        print 'case=', case
+    # max_step = nn，限调试用，更新到 nn (含）则截止，不再继续更新
+    assert (len(args) == 2)
+    max_step = string.atoi(args[0])
+    down = string.atoi(args[1])
 
-        # down = 0
-        # down = -n, 回退 n 步，限开发过程中不同分支间的版本迁移，慎用
-        # down =  n, 回退到第 n 步（不含），限开发过程中不同分支间的版本迁移，慎用
+    # 运行环境
+    print '\ncase=False'
+    Config(case=False)
+    Migration('migration').run(max_step=max_step, down=down, step_list=mlist)
 
-        # max_step = nn，限调试用，更新到 nn (含）则截止，不再继续更新
-
-        assert (len(args) == 2)
-        Migration().run(max_step=string.atoi(args[0]), down=string.atoi(args[1]))
+    # 用例环境
+    print '\ncase=True'
+    Config(case=True)
+    Migration('migration').run(max_step=max_step, down=down, step_list=mlist)
+    Migration('migration_test').run(max_step=max_step, down=down, step_list=tlist)
 
 
 if __name__ == '__main__':
