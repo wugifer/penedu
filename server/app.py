@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 
 
-import hashlib
 import time
 from multiprocessing import Process
 
 import pytest
 from flask import Flask, render_template, redirect, request, session, url_for
+
+from libs.config import Config
 
 # <editor-fold desc="ROOT_ANCHOR"> @formatter:off
 # 由 entry.create_code.create_root 自动生成，请勿修改！
@@ -55,8 +56,6 @@ class CustomFlask(Flask):
 sub_modules = ['entry', 'libc', 'libs', 'model', 'server']
 # @formatter:on </editor-fold>
 
-
-
 def run_tests_sync():
     # entry, libc, libs, model, server
     root = [os.path.abspath(os.path.realpath('%s/../../%s' % (__file__, x))) for x in sub_modules]
@@ -87,7 +86,6 @@ def flask_pytest(true_app):
 ################################################################################
 #
 # 创建 app
-
 
 app = flask_pytest(CustomFlask(__name__))
 app.secret_key = 'D\xe7\x82\xe2v\xc22$ha0\xa9\xc7\x97!\xfc'
@@ -137,9 +135,8 @@ def html(name):
 app.register_blueprint(bpee11cbb19052e40b07aac0ca060c23ee, url_prefix='/user')
 # @formatter:on </editor-fold>
 
-
-
 def main():
+    Config(test=False)
     app.run(debug=True)
 
 
