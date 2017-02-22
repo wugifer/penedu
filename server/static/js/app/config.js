@@ -16,15 +16,11 @@ define([], function () {
                     // 点击链接/$state.go()触发，约定：状态规则为 模块名_xxx.other-part
                     tokens = to.split(/[_.]/);
                     if (tokens.length >= 2 && tokens[0] == 'main') {
-                        //             // load
-                        //             $ocLazyLoad.load(tokens[1])
-                        //                 .then(function () {
-                        //                     state.transitionTo(to, param, option);
-                        //                 }, function () {
-                        //                     console.log('load module ' + tokens[1] + ' error!');
-                        //                 });
+                        require(['state/' + to], function (md5) {
+                            state.transitionTo(to, param, option);
+                        });
                     } else {
-                        //             state.transitionTo(to, param, option);
+                        state.transitionTo(to, param, option);
                     }
                 }
             };
@@ -37,21 +33,15 @@ define([], function () {
         $rootScope.$on('$locationChangeStart', function () {
             // 约定：路径规则为 /模块名/xxx/other-part
             if (!$location.path()) {
-                //         $location.path('/');
+                $location.path('/');
             }
             // console.log($location.path());
             tokens = $location.path().split('/');
-            if (tokens.length >= 3 && tokens[1].length > 1) {
-                //         // load
-                //         $ocLazyLoad.load(tokens[1])
-                //             .then(function () {
-                //                     $urlRouter.sync();
-                //                     $urlRouter.listen();
-                //                 },
-                //                 function (err) {
-                //                     console.log('load module ' + tokens[1] + ' error!');
-                //                     console.log(err);
-                //                 });
+            if (tokens.length >= 2 && tokens[1].length > 1) {
+                require(['state/main' + tokens.join('.')], function (md5) {
+                    $urlRouter.sync();
+                    $urlRouter.listen();
+                });
             }
         });
     };

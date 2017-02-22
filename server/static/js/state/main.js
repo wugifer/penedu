@@ -4,17 +4,18 @@ requirejs.config({
 
     // 例外路径，不含 .js 后缀
     paths: {
-        app: '/static/js/app'
+        app: '/static/js/app',
+        state: '/static/js/state'
     },
 
     // 其它
     shim: {}
 });
 
-requirejs(['app/config'],
-    function (config) {
+requirejs(['app/global', 'app/config'],
+    function (g, config) {
 
-        angular
+        app = angular
 
             .module('mainApp', ['ui.router'])
 
@@ -23,8 +24,16 @@ requirejs(['app/config'],
             .run(config.location)
 
             .config(config.index)
+
+            .config(function ($stateProvider) {
+                g.register = {
+                    state: $stateProvider
+                };
+            })
         ;
 
         angular.bootstrap(document, ['mainApp']);
+
+        g.app = app;
     }
 );

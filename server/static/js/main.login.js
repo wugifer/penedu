@@ -11,7 +11,7 @@ requirejs.config({
     shim: {}
 });
 
-requirejs(['app/login.controller'],
+requirejs(['app/login'],
     function (loginController) {
 
         angular
