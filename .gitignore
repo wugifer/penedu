@@ -1,0 +1,8 @@
+*.pyc
+.coverage
+/.cache
+/.idea
+/build
+/db/*.db
+/entry/htmlcov
+migrations
