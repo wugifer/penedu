@@ -3,32 +3,41 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-penedu 自动构建文档
-==================================
+penedu 开发文档
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-
-
-目录
-==================
+Preface
+=======
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
 
+libc
+====
 
-模块
-==================
+libc 存放通用的模块，即在项目之外复用概率较大的模块。实现时应尽量不使用项目相关信息
 
-model.user.models
------------------
+ttsave
+------
+
+.. automodule:: libc.ttsave
+
+model
+=====
+
+user.models
+-----------
 
 .. automodule:: model.user.models
 
-server.blueprint.user_controller
---------------------------------
+server
+======
+
+blueprint.user_controller
+-------------------------
 
 .. automodule:: server.blueprint.user_controller
