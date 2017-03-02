@@ -15,7 +15,7 @@ RUN rpm -i /pkg/*.rpm \
         sphinx \
     && rm -rf /egg \
     && mv /nginx.conf /etc/nginx/nginx.conf
-EXPOSE 5081
+EXPOSE 5000
 
 # patch
 RUN sed -i -e '/issame...self/s/issame.*/issame = True/' /usr/lib/python2.7/site-packages/py/_path/local.py

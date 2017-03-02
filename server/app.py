@@ -1,14 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-
 import time
 from multiprocessing import Process
 
 import pytest
 from flask import Flask, render_template, redirect, request, session, url_for
-
-from libs.config import Config
 
 # <editor-fold desc="ROOT_ANCHOR"> @formatter:off
 # 由 entry.create_code.create_root 自动生成，请勿修改！
@@ -18,9 +15,12 @@ import os
 import sys
 
 PROJECT_ROOT = os.path.abspath(os.path.realpath(__file__ + '/../../'))
+print PROJECT_ROOT
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 # @formatter:on </editor-fold>
+
+from libs.config import Config
 
 # <editor-fold desc="DJANGO_ANCHOR"> @formatter:off
 # 由 entry.create_code.create_django 自动生成，请勿修改！
@@ -137,7 +137,7 @@ app.register_blueprint(bpee11cbb19052e40b07aac0ca060c23ee, url_prefix='/user')
 
 def main():
     Config(test=False)
-    app.run(debug=True)
+    app.run('0.0.0.0', debug=True)
 
 
 if __name__ == '__main__':
