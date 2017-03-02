@@ -1,0 +1,7 @@
+FROM scratch
+ADD centos-7-docker.tar.xz /
+RUN localedef -f UTF-8 -i zh_CN zh_CN.UTF-8
+ENV LANGUAGE zh_CN.UTF-8
+ENV LANG zh_CN.UTF-8
+ENV LC_ALL=zh_CN.UTF-8
+CMD ["/bin/bash"]

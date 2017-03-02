@@ -1,0 +1,5 @@
+FROM wg/centos:7
+ADD pkg /pkg
+RUN rpm -i /pkg/*.rpm \
+    && rm -rf /pkg
+CMD ["/bin/bash"]
