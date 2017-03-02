@@ -25,7 +25,7 @@ django_setup()
 
 # <editor-fold desc="MODEL_ANCHOR"> @formatter:off
 # 由 entry.create_code.create_model 自动生成，请勿修改！
-models = ['kv', 'user']
+models = ['cword', 'kv', 'user']
 # @formatter:on </editor-fold>
 
 """

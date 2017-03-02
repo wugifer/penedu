@@ -83,7 +83,7 @@ def create_migration():
 
 
 def create_model():
-    models = ['kv', 'user']
+    models = ['cword', 'kv', 'user']
     return 'models = [\'' + '\', \''.join(models) + '\']'
 
 
