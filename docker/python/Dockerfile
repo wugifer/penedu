@@ -13,6 +13,7 @@ RUN rpm -i /pkg/*.rpm \
         pytest_cov \
         pytest_flask \
         sphinx \
+        pyquery \
     && rm -rf /egg \
     && mv /nginx.conf /etc/nginx/nginx.conf
 EXPOSE 5000
